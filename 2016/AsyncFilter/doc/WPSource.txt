@@ -1,0 +1,206 @@
+﻿<strong>The purpose of a Filter</strong> is to receive values from client, and decide what values and when we want to forward (or even transform) to the output provided by the client.
+
+This is a <strong>callback based</strong> filter chain model that supports to:
+<ul>
+	<li>Drop calls</li>
+	<li>Transform value of calls</li>
+	<li>Change timing of calls</li>
+</ul>
+
+[java title="Filter interface:"]
+public interface Filter&lt;T&gt; {
+	void filter(T input, FilterOutput&lt;T&gt; output);
+}
+
+public interface FilterOutput&lt;T&gt; {
+	void filtered(T value);
+}
+[/java]
+
+This is useful for example if you want to implement an instant search box in GWT that tracks every keypress, but you don't want to flood the server with plenty of calls, you can implement a Filter that waits a specific delay before making a call with last value (while dropping intermediate values.)
+<h1>Client code example</h1>
+
+[java title=""]
+public class FilterDemo {
+	
+	private static List&lt;String&gt; STRINGS = Arrays.asList(new String[] {
+			"  Peter  ",
+			"Ida",
+			"Po",
+			"Kovacs Lajos",
+			"BO",
+			"  Tamara    ",
+			"    Tamara",
+			"Tamara",
+			"Adam",
+	});
+	
+	public static void main(String[] args) {
+		System.out.println("inputs: " + STRINGS);
+		
+		FilterChain&lt;String&gt; filterChain = new FilterChain&lt;&gt;(System.out::println, 
+				new TrimFilter(),
+				new DuplicateRemoverFilter&lt;String&gt;(), 
+				new MinLengthFilter(3), 
+				new UppercaseFilter(),
+				new AsyncDelayFilter&lt;String&gt;(500)
+		);
+
+		STRINGS.stream()
+			.forEach(s -&gt; filterChain.filter(s));
+	}
+	
+}
+[/java]
+
+Console output:
+
+[shell]
+inputs: [  Peter  , Ida, Po, Kovacs Lajos, BO,   Tamara    ,     Tamara, Tamara, Adam]
+PETER
+KOVACS LAJOS
+IDA
+TAMARA
+ADAM
+[/shell]
+
+<h1>The FilterChain implementation:</h1>
+
+[java title=""]
+import java.util.Arrays;
+import java.util.Iterator;
+
+public class FilterChain&lt;T&gt; {
+	private FilterOutput&lt;T&gt; finalFilterOutput;
+	private FilterWrapper&lt;T&gt; filterWrapper;
+	
+	@SafeVarargs
+	public FilterChain(FilterOutput&lt;T&gt; filterOutput, Filter&lt;T&gt;... filters) {
+		this.finalFilterOutput = filterOutput;
+		assertMinimumOne(filters);
+		filterWrapper = new FilterWrapperBuilder().build(Arrays.asList(filters).iterator());
+	}
+
+	private void assertMinimumOne(Filter&lt;T&gt;... filters) {
+		if(filters.length &lt; 1)
+			throw new RuntimeException("No filter provided, while the minimum is one.");
+	}
+
+	public void filter(T input) {
+		filterWrapper.filter(input);
+	}
+
+	private class FilterWrapperBuilder {
+		private Iterator&lt;Filter&lt;T&gt;&gt; iterator;
+
+		public FilterWrapper&lt;T&gt; build(Iterator&lt;Filter&lt;T&gt;&gt; iterator) {
+			this.iterator = iterator;
+			return new FilterWrapper&lt;&gt;(iterator.next(), nextFilterOutput());
+		}
+
+		private FilterOutput&lt;T&gt; nextFilterOutput() {
+			if(iterator.hasNext())
+				return new ChainFilterOutput&lt;&gt;(iterator.next(), nextFilterOutput());
+			else
+				return finalFilterOutput;
+		}
+	}
+	
+	private static class FilterWrapper&lt;T&gt; {
+		private Filter&lt;T&gt; filter;
+		private FilterOutput&lt;T&gt; filterOutput;
+		
+		public FilterWrapper(Filter&lt;T&gt; filter, FilterOutput&lt;T&gt; filterOutput) {
+			this.filter = filter;
+			this.filterOutput = filterOutput;
+		}
+		
+		public void filter(T value) {
+			filter.filter(value, filterOutput);
+		}
+	}
+	
+	private static class ChainFilterOutput&lt;T&gt; implements FilterOutput&lt;T&gt; {
+		private Filter&lt;T&gt; nextFilter;
+		private FilterOutput&lt;T&gt; nextFilterOutput;
+		
+		public ChainFilterOutput(Filter&lt;T&gt; nextFilter, FilterOutput&lt;T&gt; nextFilterOutput) {
+			this.nextFilter = nextFilter;
+			this.nextFilterOutput = nextFilterOutput;
+		}
+		@Override
+		public void filtered(T value) {
+			nextFilter.filter(value, nextFilterOutput);
+		}
+	}
+	
+}
+[/java]
+
+<h1>Some filter implementation examples:</h1>
+
+[java title=""]
+public class TrimFilter implements Filter&lt;String&gt; {
+
+	@Override
+	public void filter(String input, FilterOutput&lt;String&gt; filterOutput) {
+		filterOutput.filtered(input.trim());
+	}
+
+}
+
+public class MinLengthFilter implements Filter&lt;String&gt; {
+	private int minLength;
+
+	public MinLengthFilter(int minLength) {
+		this.minLength = minLength;
+	}
+
+	@Override
+	public void filter(String input, FilterOutput&lt;String&gt; filterOutput) {
+		if(input.length() &gt;= minLength)
+			filterOutput.filtered(input);
+	}
+}
+
+public class DuplicateRemoverFilter&lt;T&gt; implements Filter&lt;T&gt; {
+	private T lastInput = null;
+	
+	@Override
+	public void filter(T input, FilterOutput&lt;T&gt; filterOutput) {
+		if(!Objects.equals(input, lastInput)) {
+			lastInput = input;
+			filterOutput.filtered(input);
+		}
+	}
+}
+
+public class AsyncDelayFilter&lt;T&gt; implements Filter&lt;T&gt; {
+	private int millis;
+
+	public AsyncDelayFilter(int millis) {
+		this.millis = millis;
+	}
+
+	@Override
+	public void filter(T input, FilterOutput&lt;T&gt; filterOutput) {
+		new Thread(() -&gt; 
+			doFilter(input, filterOutput)
+		).start();
+	}
+
+	private void doFilter(T input, FilterOutput&lt;T&gt; filterOutput) {
+		sleep();
+		filterOutput.filtered(input);
+	}
+
+	private void sleep() {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
+}
+
+[/java]
