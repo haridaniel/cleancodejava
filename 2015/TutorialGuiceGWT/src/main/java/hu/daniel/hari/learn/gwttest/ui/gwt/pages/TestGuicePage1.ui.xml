@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
+	<ui:style>
+		.highlighted {
+			font-weight: bolder;
+			background-color: yellow;
+		}
+	</ui:style>
+	<g:HTMLPanel>
+		<g:Label text="TestGuicePage1"/>
+		<g:HorizontalPanel>
+			<g:Label text="Request count within http session:"/>
+			<g:Label text="New Label" ui:field="lbRequestCountWithinHttpSession" styleName="{style.highlighted}"/>
+		</g:HorizontalPanel>
+		<g:HorizontalPanel>
+			<g:Label text="Address"/>
+			<g:TextBox ui:field="tbNewAddress"/>
+			<g:Button ui:field="btNewAddress">New</g:Button>
+		</g:HorizontalPanel>
+		<g:VerticalPanel>
+			<g:Label text="AddressList:"/>
+			<g:VerticalPanel ui:field="addressListPanel"/>
+			<g:Button ui:field="btExportAddressList">Export to console</g:Button>
+		</g:VerticalPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

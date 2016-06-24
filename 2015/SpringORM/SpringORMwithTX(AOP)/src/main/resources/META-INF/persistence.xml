@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- USED ONLY FOR ECLIPSE JPA VALIDATOR -->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+	<persistence-unit name="my-persistence-unit" transaction-type="RESOURCE_LOCAL">
+	</persistence-unit>
+</persistence>

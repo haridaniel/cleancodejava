@@ -1,0 +1,37 @@
+<html>
+<head>
+<title></title>
+</head>
+<body>
+	<h3>Spring 4 ORM example with JPA, Hibernate, AOP Transactions</h3>
+	<p>This is a very simple example that shows you how to configure an
+		application with Spring that uses</p>
+	<ul>
+		<li>Dependency Injection (@Autowired annotation),</li>
+		<li>JPA EntityManager (provided by Hibernate),</li>
+		<li>Transactional methods (AOP configured).&nbsp;</li>
+	</ul>
+	<p>
+		To configure the transactional methods we do not use @Transactional annotations now because we use aspect oriented approach in this example (we can say all methods in the service package starting with
+		&quot;get&quot; is a read-only transactional method). 
+		<br> <br>(For @Transactional annotatated approach please check this tutorial:
+		http://www.journaldev.com/7655/spring-orm-example-with-jpa-hibernate-<br>transactions)
+		<br> <br>We use in-memory database for this example to simplify, so no need for any database setup. This is a standalone application example.
+	</p>
+	<p>The project structure:</p>
+	<p>(picture here)</p>
+	<p>We go through these files one by one and explain them:</p>
+	<p>1. Maven dependencies</p>
+	<p>We will first look into our pom.xml file for all the required
+		dependencies and their versions. We have used Spring 4, and Hibernate
+		4 in this example.</p>
+
+	[code] [/code]
+	<br>Service Class As you can see there are no @Transactional
+	annotations here, but we want these methods to run in transactions. The
+	reason is that we use AOP approach for transactional methods, that we
+	will configure easily later in spring.xml.
+
+
+</body>
+</html>

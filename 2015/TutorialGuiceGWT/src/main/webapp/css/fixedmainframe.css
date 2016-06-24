@@ -1,0 +1,124 @@
+
+body#body {
+	margin:0px;
+	padding:0px;
+	overflow: hidden;
+}
+
+/****************** MAINFRAME PANELS ********************/
+
+#header {
+	height: 75px;				/* header height */
+
+	min-width: 700px;	/*header min-width */
+
+	background-color: #e2effe;
+	/* 	DEBUG */
+/* 	background-color: #00FFF5;   */
+}
+
+#content {
+	position: fixed;
+	top: 75px;							/* 	the height of the header */						
+	bottom: 24px;						/*	the height of the footer */
+	left: 0px;
+	right: 0px;	
+	
+	margin: 5px;
+	/* 	DEBUG */
+/* 	background-color: green;   */
+}
+
+#footer {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	
+	height: 20px;			/* footer height */
+	
+	min-width: 700px;				/* same as header min-width */ 
+	border-top: 4px solid #002f5f; /* influences height */
+}
+
+#content-left {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left:0px;
+	
+	width: 220px;			/* content-left width */
+
+	overflow: auto;
+	/* 	DEBUG */
+	/* 	background-color: lime;   */
+}
+
+#content-right {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 220px;						/* the width of the content-left */
+	right: 0px;
+
+	padding: 10px;
+	border: solid 1px #BBB;
+	overflow: auto;
+}
+
+/****************** SUB PANELS ********************/
+
+#header-content {
+	border-top: 4px solid #002f5f;
+	padding: 8px;
+}
+
+#logoContainer {
+	float: left;
+}
+
+#login-box {
+	float: right;
+	padding: 5px;
+	text-align:right;
+	/* 	DEBUG */
+	/* 	background-color: red; */ 
+}
+
+#footer span {
+	display: block;
+	float: left;
+	margin: 0px 10px;
+}
+#footer ul {
+	list-style: none;
+	margin: 0px 10px;
+	float:right;
+}
+#footer ul li {
+	float: left;
+	padding-left: 10px;
+}
+#footer ul li a {
+	color: #002f5f;
+	text-decoration: none;
+}
+#footer ul li a:hover {
+	text-decoration: underline;
+}
+
+
+/* #testdiv1 { */
+/* 	height: 10px; */
+/* 	background-color: red; */
+/* } */
+/* #testdiv2 { */
+/* 	background-color: green; */
+/* } */
+
+/* #testdiv2_cont { */
+/* 	height: 80px; */
+/* 	width: 100px; */
+/* 	background-color: yellow; */
+/* } */
+

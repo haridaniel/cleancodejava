@@ -1,0 +1,39 @@
+/* Example sass stylesheet */
+
+body {
+	padding-left: 11em;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	color: purple;
+	background-color: #CDF;
+/* 	background-color: red; */
+}
+
+ul.navbar {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 2em;
+	left: 1em;
+	width: 9em;
+
+	li { 
+		background: white;
+		margin: 0.5em 0;
+		padding: 0.3em;
+		border-right: 1em solid black;
+	}
+
+	a { 
+		text-decoration: none;
+		
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+}
+
+h1 {
+	font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif;
+}

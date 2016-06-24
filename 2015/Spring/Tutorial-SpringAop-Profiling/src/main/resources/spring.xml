@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+		">
+
+	<!-- Scans the classpath for annotated components that will be auto-registered as Spring beans -->
+	<context:component-scan base-package="hu.daniel.hari.learn.spring.aop.profiling" />
+	<!-- Activates various annotations to be detected in bean classes e.g: @Autowired -->
+	<context:annotation-config />
+
+	<!-- AOP Configuration for profiling -->
+
+	<!-- Our profiler class that we want to use to measure process time of service methods. -->
+	<bean id="profiler" class="hu.daniel.hari.learn.spring.aop.profiling.core.profiler.SimpleProfiler" />
+
+	<!-- Spring AOP -->
+	<aop:config >
+		<aop:aspect ref="profiler">
+			<!-- Catch all method in the service package through AOP. -->
+			<aop:pointcut id="serviceMethod" 
+				expression="execution(* hu.daniel.hari.learn.spring.aop.profiling.service.*.*(..))" />
+			<!-- For these methods use the profile named method in the profiler class we defined below. -->
+			<aop:around pointcut-ref="serviceMethod" method="profile"  />
+		</aop:aspect>
+	</aop:config>
+
+</beans>
