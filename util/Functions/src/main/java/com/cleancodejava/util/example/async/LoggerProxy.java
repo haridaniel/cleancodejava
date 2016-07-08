@@ -8,7 +8,7 @@ public class LoggerProxy<T, R> extends AbstractAsyncFunctionProxy<T, R> {
 	@Override
 	public void apply(T input, Consumer<R> output) {
 		System.out.println("Proxy: input=" + input);
-		target.apply(input, new Consumer<R>() {
+		getTarget().apply(input, new Consumer<R>() {
 			@Override
 			public void accept(R t) {
 				System.out.println("Proxy: output=" + t);
