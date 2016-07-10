@@ -40,10 +40,10 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 		T input = scheduledInput;
 		scheduledInput = null;
 		lastForwardedInput = input;
-		getTarget().apply(input, new InnerCallback(input));
+		getTarget().apply(input, new TargetCallback(input));
 	}
 
-	private synchronized void onInnerResult(T input, R result) {
+	private synchronized void onTargetResult(T input, R result) {
 		if(isLastForwardedInputAndNoScheduledInput(input))
 			lastFunctionCallback.accept(result);
 	}
@@ -57,16 +57,16 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 		timer.reSchedule(delayMS);
 	}
 	
-	private class InnerCallback implements Consumer<R>{
+	private class TargetCallback implements Consumer<R> {
 		private T input;
 
-		public InnerCallback(T input) {
+		public TargetCallback(T input) {
 			this.input = input;
 		}
 		
 		@Override
 		public void accept(R result) {
-			onInnerResult(input, result);
+			onTargetResult(input, result);
 		}
 	}
 	
