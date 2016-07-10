@@ -1,9 +1,9 @@
 package com.cleancodejava.util.examples.filtering.floodfilter;
 
-import com.cleancodejava.util.filtering.FloodFilteringAsyncFunctionProxy;
 import com.cleancodejava.util.functions.asyncchain.AsyncChain;
 import com.cleancodejava.util.functions.function.AsyncFunction;
 import com.cleancodejava.util.functions.function.NullConsumer;
+import com.cleancodejava.util.gwtincompatible.filtering.FloodFilteringAsyncFunctionProxy;
 
 public class Main {
 	public static void main(String[] args) {

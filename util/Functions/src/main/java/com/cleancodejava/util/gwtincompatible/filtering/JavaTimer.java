@@ -1,8 +1,9 @@
-package com.cleancodejava.util.filtering;
+package com.cleancodejava.util.gwtincompatible.filtering;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.cleancodejava.util.filtering.BaseFloodFilterFunctionProxy;
 import com.cleancodejava.util.filtering.BaseFloodFilterFunctionProxy.SimpleTimer;
 
 class JavaTimer implements SimpleTimer {

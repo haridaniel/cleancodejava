@@ -1,4 +1,6 @@
-package com.cleancodejava.util.filtering;
+package com.cleancodejava.util.gwtincompatible.filtering;
+
+import com.cleancodejava.util.filtering.BaseFloodFilterFunctionProxy;
 
 /**
  * Uses JavaTimer as a timer.
