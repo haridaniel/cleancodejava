@@ -73,7 +73,13 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 	public void setDelayMs(int delayMS) {
 		this.delayMS = delayMS;
 	}
-	
+
+	public enum State {
+		IDLE,
+		SCHEDULED,
+		IN_CALL
+	}
+
 	public interface SimpleTimer {
 		void setRunnable(Runnable runnable);
 		void reSchedule(int millis);
