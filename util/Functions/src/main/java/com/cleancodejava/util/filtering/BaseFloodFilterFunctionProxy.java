@@ -35,7 +35,15 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 		lastFunctionCallback = callback; 
 		restartTimer();
 	}
-
+	
+	/** cancels current scheduled value, even if it is already in-call state.
+	 * if there is no value scheduled, then no effect. **/
+	public synchronized void cancel() {
+		timer.cancel();
+		scheduledInput = null;
+		lastForwardedInput = null;
+	}
+	
 	private synchronized void onTimerFired() {
 		T input = scheduledInput;
 		scheduledInput = null;
@@ -83,6 +91,7 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 	public interface SimpleTimer {
 		void setRunnable(Runnable runnable);
 		void reSchedule(int millis);
+		void cancel();
 	}
 
 }

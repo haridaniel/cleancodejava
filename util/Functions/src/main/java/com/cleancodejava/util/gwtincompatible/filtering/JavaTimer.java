@@ -3,7 +3,6 @@ package com.cleancodejava.util.gwtincompatible.filtering;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.cleancodejava.util.filtering.BaseFloodFilterFunctionProxy;
 import com.cleancodejava.util.filtering.BaseFloodFilterFunctionProxy.SimpleTimer;
 
 class JavaTimer implements SimpleTimer {
@@ -23,14 +22,23 @@ class JavaTimer implements SimpleTimer {
 	}
 
 	private void reCreateTimerTask() {
-		if(timerTask != null)
-			timerTask.cancel();
+		cancelTimer();
 		timerTask = new TimerTask() {
 			@Override
 			public void run() {
 				runnable.run();
 			}
 		};
+	}
+
+	private void cancelTimer() {
+		if(timerTask != null)
+			timerTask.cancel();
+	}
+
+	@Override
+	public void cancel() {
+		cancelTimer();
 	}
 	
 }

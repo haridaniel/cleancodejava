@@ -1,7 +1,9 @@
 package com.cleancodejava.util.functions.asyncchain;
 
+import com.cleancodejava.util.examples.functions.basic.async.TrimmerService;
 import com.cleancodejava.util.functions.function.AsyncFunction;
 import com.cleancodejava.util.functions.function.Consumer;
+import com.cleancodejava.util.functions.function.Function;
 
 public class ChainBuilder<T, R> {
 
@@ -28,6 +30,10 @@ public class ChainBuilder<T, R> {
 		lastNode.chain(asyncFunction);
 		return new FinalBuilder<>(firstNode).build();
 	}
+	
+	public AsyncFunction<T, R> to(Function<T, R> function) {
+		return to(new SyncAsyncFunctionAdapter<>(function));
+	}
 
 	public static class FinalBuilder<T, R> {
 
@@ -46,5 +52,6 @@ public class ChainBuilder<T, R> {
 			};
 		}
 	}
+
 
 }
