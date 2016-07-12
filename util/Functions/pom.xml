@@ -33,6 +33,7 @@
 				<includes>
 					<!-- SOURCES NEEDED FOR GWT -->
 					<include>**/*.java</include>
+					<include>**/*.xml</include>
 				</includes>
 			</resource>
 		</resources>
