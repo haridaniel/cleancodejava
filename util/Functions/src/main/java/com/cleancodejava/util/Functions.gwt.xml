@@ -3,5 +3,6 @@
 
 	<source path='filtering' />
 	<source path='functions' />
+	<source path='observable' />
 
 </module>

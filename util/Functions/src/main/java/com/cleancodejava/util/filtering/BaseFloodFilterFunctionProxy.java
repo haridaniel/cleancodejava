@@ -2,6 +2,8 @@ package com.cleancodejava.util.filtering;
 
 import com.cleancodejava.util.functions.asyncchain.AbstractAsyncFunctionProxy;
 import com.cleancodejava.util.functions.function.Consumer;
+import com.cleancodejava.util.observable.Observable;
+import com.cleancodejava.util.observable.Observable.ChangeListener;
 
 /**
  * Timer is decoupled to be compatible with GWT.
@@ -13,11 +15,14 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 	private T scheduledInput = null;
 	private Consumer<R> lastFunctionCallback;
 	private T lastForwardedInput = null;
+	
+	private Observable<State> observableState = new Observable<>(State.IDLE);
 
 	public BaseFloodFilterFunctionProxy(SimpleTimer timer, int delayMS) {
 		this.timer = timer;
 		this.delayMS = delayMS;
 		initTimer();
+		
 	}
 
 	private void initTimer() {
@@ -32,7 +37,8 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 	@Override
 	public synchronized void apply(T input, Consumer<R> callback) {
 		scheduledInput = input;
-		lastFunctionCallback = callback; 
+		lastFunctionCallback = callback;
+		setState(State.SCHEDULED);
 		restartTimer();
 	}
 	
@@ -42,18 +48,22 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 		timer.cancel();
 		scheduledInput = null;
 		lastForwardedInput = null;
+		setState(State.IDLE);
 	}
-	
+
 	private synchronized void onTimerFired() {
 		T input = scheduledInput;
 		scheduledInput = null;
 		lastForwardedInput = input;
+		setState(State.IN_CALL);
 		getTarget().apply(input, new TargetCallback(input));
 	}
 
 	private synchronized void onTargetResult(T input, R result) {
-		if(isLastForwardedInputAndNoScheduledInput(input))
+		if(isLastForwardedInputAndNoScheduledInput(input)) {
 			lastFunctionCallback.accept(result);
+			setState(State.IDLE);
+		}
 	}
 	
 	private boolean isLastForwardedInputAndNoScheduledInput(T input) {
@@ -80,6 +90,14 @@ public class BaseFloodFilterFunctionProxy<T, R> extends AbstractAsyncFunctionPro
 	
 	public void setDelayMs(int delayMS) {
 		this.delayMS = delayMS;
+	}
+
+	private void setState(State state) {
+		observableState.set(state);
+	}
+	
+	public void addStateChangeListener(ChangeListener<State> listener) {
+		observableState.addChangeListener(listener);
 	}
 
 	public enum State {
