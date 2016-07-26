@@ -17,28 +17,22 @@ public class MainPipelineTest {
 			"Kovacs Lajos",
 			"BO",
 			"  Tamara    ",
-			"    Tamara",
+			"    TAMARA",
 			"Tamara",
 			"Adam",
 	}); 
 
 	
 	public MainPipelineTest() {
-		
-		Consumer<String> consumer = Pipeline.ofInputType(String.class)
-				.filter(s -> !"Po".equals(s))
-//				.peek(s -> System.out.println("peek: " + s))
+		Consumer<String> pipeline = Pipeline.ofInputType(String.class)
 				.map(s -> s.trim())
+				.map(s -> s.toLowerCase())
 				.filter(new DuplicateSkipper<>())
-//				.map(s -> s + "!")
-//				.map(s -> s.length())
 				.to(s -> System.out.println(s))
 				;
 		
-
 		STRINGS.stream()
-			.forEach(consumer::accept);
-		
-		
+			.forEach(pipeline::accept);
 	}
+
 }
