@@ -4,7 +4,7 @@
 
 	<groupId>com.daniel.hari</groupId>
 	<artifactId>functions-ext</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.daniel.hari</groupId>
 			<artifactId>functions</artifactId>
-			<version>0.9.0-SNAPSHOT</version>
+			<version>0.9.1-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
