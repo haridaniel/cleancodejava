@@ -1,7 +1,5 @@
 package com.daniel.hari.util.function;
 
-import java.util.function.Function;
-
 /**
  * Represents an operation on a single operand that produces a result of the
  * same type as its operand.
